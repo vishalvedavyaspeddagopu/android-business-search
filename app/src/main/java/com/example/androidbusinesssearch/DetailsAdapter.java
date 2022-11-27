@@ -19,10 +19,10 @@ public class DetailsAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position)
         {
-            case 0: return new DetailsFragment();
-            case 1: return new DetailsFragment();
+            case 0: return DetailsFragment.newInstance(businessId);
+            case 1: return MapsFragment.newInstance(businessId);
             case 2: return ReviewsFragment.newInstance(businessId);
-            default: return new DetailsFragment();
+            default: return (businessId == null ? new DetailsFragment() : DetailsFragment.newInstance(businessId));
         }
     }
 
@@ -30,10 +30,4 @@ public class DetailsAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return 3;
     }
-
-//    @Override
-//    public long getItemId(int position)
-//    {
-//        return position;
-//    }
 }
