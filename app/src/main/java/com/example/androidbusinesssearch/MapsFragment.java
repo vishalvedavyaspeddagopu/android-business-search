@@ -27,34 +27,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsFragment extends Fragment {
-    private String businessId;
+    private Double longitude;
+    private Double latitude;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            //Map is now ready. Add marker when you receive a response from the detail query
-            String url = "https://search-business-vive97.wl.r.appspot.com/api/getBusinessDetail?id=" + businessId;
+            LatLng location = new LatLng(latitude, longitude);
+            googleMap.addMarker(new MarkerOptions().position(location).title("Marker"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f));
 
-            Log.d("detail-url-maps", url);
-            //Remove network call to improve map marker updates
-            RequestQueue requestQueue = VolleyRequestQueue.getInstance(getActivity().getApplicationContext()).getRequestQueue(getActivity().getApplicationContext());
-
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    response -> {
-                        try {
-                            JSONObject obj = response.getJSONObject("coordinates");
-                            //add a marker here
-                            LatLng location = new LatLng(obj.getDouble("latitude"), obj.getDouble("longitude"));
-                            googleMap.addMarker(new MarkerOptions().position(location).title("Marker"));
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("info", response.toString());
-                    }, error -> Log.e("error", "Network call failed"));
-
-            requestQueue.add(jsonObjectRequest);
+//            //Map is now ready. Add marker when you receive a response from the detail query
+//            String url = "https://search-business-vive97.wl.r.appspot.com/api/getBusinessDetail?id=" + businessId;
+//
+//            Log.d("detail-url-maps", url);
+//            //Remove network call to improve map marker updates
+//            RequestQueue requestQueue = VolleyRequestQueue.getInstance(getActivity().getApplicationContext()).getRequestQueue(getActivity().getApplicationContext());
+//
+//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+//                    response -> {
+//                        try {
+//                            JSONObject obj = response.getJSONObject("coordinates");
+//                            //add a marker here
+//                            LatLng location = new LatLng(obj.getDouble("latitude"), obj.getDouble("longitude"));
+//                            googleMap.addMarker(new MarkerOptions().position(location).title("Marker"));
+//                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        Log.d("info", response.toString());
+//                    }, error -> Log.e("error", "Network call failed"));
+//
+//            requestQueue.add(jsonObjectRequest);
         }
     };
 
@@ -62,7 +67,8 @@ public class MapsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            businessId = getArguments().getString("businessId");
+            latitude = getArguments().getDouble("latitude");
+            longitude = getArguments().getDouble("longitude");
         }
     }
 
@@ -84,12 +90,13 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    public static MapsFragment newInstance(String businessId) {
+    public static MapsFragment newInstance(Double longitude, Double latitude) {
         MapsFragment f = new MapsFragment();
 
         // Supply business id as an argument.
         Bundle args = new Bundle();
-        args.putString("businessId", businessId);
+        args.putDouble("longitude", longitude);
+        args.putDouble("latitude", latitude);
         f.setArguments(args);
 
         return f;

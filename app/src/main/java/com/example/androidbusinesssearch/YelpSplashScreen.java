@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class YelpSplashScreen extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setTheme(R.style.CustomSplashScreen);
+        super.onCreate(savedInstanceState);
 
         new Handler().postDelayed(new Runnable() {
             @Override

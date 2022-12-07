@@ -60,52 +60,33 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
                     Log.d("id-tag-new", row.getId());
                     Log.d("id-name-new", row.getName());
 
-//                    launchDetailView(row.getId());
                     Intent intent = new Intent(context, DetailTabs.class);
                     intent.putExtra("businessId", row.getId());
+                    intent.putExtra("businessName", row.getName());
                     context.startActivity(intent);
                 }
             });
 
-            Picasso.get().setLoggingEnabled(true);
-            Picasso.get().load(row.getImageUrl()).resize(120, 120)
-                    .into(holder.image, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                        }
+            if(row.getImageUrl() != null && !row.getImageUrl().isEmpty()) {
+                Picasso.get().setLoggingEnabled(true);
+                Picasso.get().load(row.getImageUrl()).resize(120, 120)
+                        .into(holder.image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
 
-                        @Override
-                        public void onError(Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                            @Override
+                            public void onError(Exception e) {
+                                Log.d("image issue", row.getImageUrl());
+                                e.printStackTrace();
+                            }
+                        });
+            }
+
             holder.name.setText(row.getName());
             holder.rating.setText(String.valueOf(row.getRating()));
             holder.dist.setText(String.valueOf(row.getDistanceInMiles()));
         }
-    }
-
-    public void launchDetailView(String businessId) {
-        String url = "https://search-business-vive97.wl.r.appspot.com/api/getBusinessDetail?id=" + businessId;
-
-        RequestQueue requestQueue = VolleyRequestQueue.getInstance(context.getApplicationContext()).getRequestQueue(context.getApplicationContext());
-
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Intent intent = new Intent(context, DetailTabs.class);
-                        intent.putExtra("detail_response", response);
-                        Log.d("detail_response", response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("error", "Network call failed");
-            }
-        });
-
-        requestQueue.add(jsonObjectRequest);
     }
 
     @Override

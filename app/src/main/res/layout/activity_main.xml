@@ -52,6 +52,7 @@
                 android:layout_height="wrap_content"
 
                 android:clickable="true"
+                android:onClick="launchReservationsPage"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/reservation"
                 tools:ignore="TouchTargetSizeCheck" />
@@ -59,7 +60,7 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/keyword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +70,21 @@
         android:hint="@string/keyword_hint"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/form_title" />
+        app:layout_constraintTop_toBottomOf="@+id/form_title">
+<!--        <requestFocus />-->
+    </AutoCompleteTextView>
+
+<!--    <EditText-->
+<!--        android:id="@+id/keyword"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="9"-->
+<!--        android:hint="@string/keyword_hint"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />-->
 
     <EditText
         android:id="@+id/distance"
@@ -150,6 +165,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
+            android:onClick="resetForm"
             android:text="CLEAR" />
 
     </LinearLayout>
@@ -167,15 +183,30 @@
         app:layout_constraintTop_toBottomOf="@+id/buttons_layout" />
 
 <!--    Change layout height to 0 dp and weight to 1 - But this  trims the number of elements -->
+    <TextView
+        android:id="@+id/noResultsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C31D1D"
+        android:visibility="invisible"
+
+        android:text="No Results Found!"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/results" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/results"/>
+        app:layout_constraintTop_toBottomOf="@+id/results"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
