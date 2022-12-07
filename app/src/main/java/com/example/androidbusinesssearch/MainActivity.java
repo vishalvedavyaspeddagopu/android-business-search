@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //Set error message
                 Log.e("error", "Network call failed");
+                error.printStackTrace();
                 setUpTable(new ArrayList<>());
                 ((TextView) findViewById(R.id.noResultsLabel)).setVisibility(View.VISIBLE);
             }

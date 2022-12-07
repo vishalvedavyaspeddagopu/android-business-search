@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -35,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,8 +259,15 @@ public class DetailsFragment extends Fragment implements ReservationForm.Reserva
         SharedPreferences preferences = getActivity().getApplicationContext().getSharedPreferences("Bookings", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = preferences.getString("bookings", "[]");
-        List<Bookings> obj = gson.fromJson(json, ArrayList.class);
+        Type bookingsType = new TypeToken<List<Bookings>>() {}.getType();
+        List<Bookings> current = gson.fromJson(json, bookingsType);
 
+        List<Bookings> obj = new ArrayList<>();
+        for (Bookings bookings : current) {
+            if(bookings.getId().equals(businessId))
+                continue;
+            obj.add(bookings);
+        }
         System.out.println("Bookings size " + obj.size());
 
         // Add booking
@@ -266,7 +275,7 @@ public class DetailsFragment extends Fragment implements ReservationForm.Reserva
         obj.add(booking);
 
         // Save booking
-        String bookingsJson = gson.toJson(obj);
+        String bookingsJson = gson.toJson(obj, bookingsType);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("bookings", bookingsJson);
         editor.commit();
@@ -283,7 +292,7 @@ public class DetailsFragment extends Fragment implements ReservationForm.Reserva
             if (hrs < 10)
                 return true;
 
-            return hrs >= 17 && mins > 0;
+            return (hrs == 17 && mins > 0) || hrs > 17;
         }
         catch (Exception e) {
             e.printStackTrace();
